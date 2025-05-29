@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Режим 1.2</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <h1>Компьютер угадывает</h1>
@@ -15,21 +16,28 @@
   </div>
 
   <div id="game" style="display:none;">
-    <div id="chat"></div>
-    <input id="answer" placeholder="да / нет" />
-    <button onclick="processAnswer()">Ответить</button>
-    <p>Диапазон: <span id="min-range-game"></span> — <span id="max-range-game"></span></p>
-	<p id="secret-number" style="font-weight:bold;"></p>
-	<!-- Кнопка выйти -->
-	<button onclick="exitGame()">Выйти из игры</button>
+    <div id="chat">
+      <div id="messages"></div>
+      <input id="answer" placeholder="да / нет" />
+      <button onclick="processAnswer()">Ответить</button>
+    </div>
+
+    <br><hr><br>
+
+    <div id="status">
+      <p>Диапазон: <span id="min-range-game"></span> — <span id="max-range-game"></span></p>
+      <p id="secret-number" style="font-weight:bold;"></p>
+    </div>
+
+    <button onclick="exitGame()">Выйти из игры</button>
   </div>
 
   <!-- Сначала questionPool.js -->
   <script src="{{ url_for('static', filename='questionPool.js') }}"></script>
   <!-- Потом ваш основной скрипт -->
   <script>
-	  window.minRange = {{ min_range }};
-	  window.maxRange = {{ max_range }};
+	window.minRange = {{ min_range }};
+	window.maxRange = {{ max_range }};
 	</script>
 	<script src="{{ url_for('static', filename='game_mode_1_2.js') }}"></script>
 

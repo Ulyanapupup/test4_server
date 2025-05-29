@@ -1,4 +1,4 @@
-# server_game_1_2.py
+# mode_1_2.py
 import math
 import random
 
