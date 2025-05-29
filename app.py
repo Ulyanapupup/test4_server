@@ -1,29 +1,29 @@
 import eventlet
 eventlet.monkey_patch()
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from flask_socketio import SocketIO, send
+import uuid
+
+# Импортируем логику игры
 from game_logic import mode_1_1
-from game_logic import mode_1_2
-
-import os
-
-# Импортируем логику
-from game_logic import mode_1_1, mode_1_2
+from game_logic.mode_1_2 import Game  # импорт класса Game из mode_1_2
 
 app = Flask(__name__)
+app.secret_key = 'some_secret_key'  # для сессий
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+games = {}  # хранилище активных игр для режима 1.2: {game_id: Game}
+
+# --- Маршруты ---
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/room_setup')
 def room_setup():
     return render_template('room_setup.html')
-
 
 @app.route('/game/<mode>')
 def game_mode(mode):
@@ -35,53 +35,70 @@ def game_mode(mode):
         return render_template('room_setup.html', mode=mode)
     else:
         return "Неизвестный режим", 404
-        
+
 @app.route('/range_select_1_2')
 def range_select_1_2():
     return render_template('range_select_1_2.html')
 
-@app.route('/game_mode_1_2.html')
-def game_mode_1_2():
-    return render_template('game_mode_1_2.html')
+@app.route('/game_mode_1_2')
+def game_mode_1_2_route():
+    range_param = request.args.get('range', '0_100')
+    min_range, max_range = map(int, range_param.split('_'))
+    return render_template('game_mode_1_2.html', min_range=min_range, max_range=max_range)
 
-@app.route('/game')
-def game():
-    room_code = request.args.get('room')
-    if not room_code:
-        return "Ошибка: не указан код комнаты", 400
-    return render_template('game.html', room_code=room_code)
+# Запуск игры 1.2 — создание новой игры
+@app.route('/start_game_1_2', methods=['POST'])
+def start_game_1_2():
+    data = request.json
+    secret = int(data.get('secret'))
+    min_range = int(data.get('min_range'))
+    max_range = int(data.get('max_range'))
 
-@app.route('/start_1_2', methods=['POST'])
-def start_1_2():
-    mode_1_2.reset()
-    q = mode_1_2.next_question()
-    return jsonify({"question": q})
+    game_id = str(uuid.uuid4())
+    games[game_id] = Game(secret, min_range, max_range)
+    first_question = games[game_id].next_question()
+    return jsonify({'game_id': game_id, 'question': first_question})
 
+# Обработка ответа в игре 1.2
 @app.route('/answer_1_2', methods=['POST'])
 def answer_1_2():
-    answer = request.json.get("answer", "")
-    response, done = mode_1_2.process_answer(answer)
-    return jsonify({"response": response, "done": done})
+    data = request.json
+    game_id = data.get('game_id')
+    answer = data.get('answer')
 
+    game = games.get(game_id)
+    if not game:
+        return jsonify({'error': 'Игра не найдена'}), 404
+
+    response = game.process_answer(answer)
+    done = False
+    if isinstance(response, str) and response.startswith("Я знаю!"):
+        done = True
+
+    return jsonify({'response': response, 'done': done})
+
+# Обработка вопросов для режимов 1.1 и 1.2
 @app.route('/ask', methods=['POST'])
 def ask():
     question = request.json.get("question", "")
     mode = request.json.get("mode", "1.1")
-
     if mode == "1.1":
         answer = mode_1_1.process_question(question)
     elif mode == "1.2":
-        # в этом режиме вопрос — это ключ (например, "число чётное")
-        # и дополнительно приходит ответ игрока ("да" или "нет")
+        # Для 1.2 вопросы фильтруют возможные числа
         answer_yes = request.json.get("answer") == "да"
-        mode_1_2.filter_numbers(question, answer_yes)
-        answer = ", ".join(map(str, mode_1_2.get_possible_numbers()))
+        game_id = request.json.get("game_id")
+        game = games.get(game_id)
+        if not game:
+            return jsonify({"answer": "Игра не найдена"})
+        game.filter_numbers(question, answer_yes)
+        answer = ", ".join(map(str, game.get_possible_numbers()))
     else:
         answer = "Неподдерживаемый режим"
 
     return jsonify({"answer": answer})
 
-
+# WebSocket обработчик сообщений
 @socketio.on('message')
 def handle_message(msg):
     send(msg, broadcast=True)
