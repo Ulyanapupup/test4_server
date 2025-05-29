@@ -1,0 +1,32 @@
+<!-- game_mode_1_2.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Режим 1.2</title>
+</head>
+<body>
+  <h1>Компьютер угадывает</h1>
+
+  <div id="setup">
+    <label>Загадайте число от <span id="min-range-setup"></span> до <span id="max-range-setup"></span>:</label>
+    <input type="number" id="user-secret" />
+    <button id="start-button">Начать</button>
+  </div>
+
+  <div id="game" style="display:none;">
+    <div id="chat"></div>
+    <input id="answer" placeholder="да / нет" />
+    <button onclick="processAnswer()">Ответить</button>
+    <p><span id="min-range-game"></span><span id="max-range-game"></span></p>
+	
+	<!-- Кнопка выйти -->
+  <button onclick="exitGame()">Выйти из игры</button>
+  </div>
+
+  <!-- Сначала questionPool.js -->
+  <script src="questionPool.js"></script>
+  <!-- Потом ваш основной скрипт -->
+  <script src="script_1_2.js"></script>
+</body>
+</html>
