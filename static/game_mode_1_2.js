@@ -15,7 +15,8 @@ function startGame() {
   }
 
   document.getElementById('secret-number').textContent = `Загаданное число: ${secret}`;
-
+  updateRangeDisplay(minRange, maxRange);
+  
   fetch('/start_game_1_2', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
