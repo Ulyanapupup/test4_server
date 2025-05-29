@@ -15,7 +15,6 @@ function startGame() {
   }
 
   document.getElementById('secret-number').textContent = `Загаданное число: ${secret}`;
-  updateRangeDisplay(minRange, maxRange);
   
   fetch('/start_game_1_2', {
     method: 'POST',
@@ -29,10 +28,13 @@ function startGame() {
         return;
       }
       gameId = data.game_id;
+	  
       document.getElementById('setup').style.display = 'none';
       document.getElementById('game').style.display = 'block';
+	  
+	  updateRangeDisplay(data.min, data.max);
+	  
       appendToChat("Компьютер", data.question);
-      updateRangeDisplay(data.min, data.max);
     });
 }
 
