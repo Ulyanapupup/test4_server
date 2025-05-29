@@ -37,15 +37,20 @@ def game_mode(mode):
     else:
         return "Неизвестный режим", 404
 
-@app.route('/range_select_1_2')
-def range_select_1_2():
+@app.route('/select_range_1_2')
+def select_range_1_2():
     return render_template('range_select_1_2.html')
 
+
 @app.route('/game_mode_1_2')
-def game_mode_1_2_route():
-    range_param = request.args.get('range', '0_100')
-    min_range, max_range = map(int, range_param.split('_'))
+def game_mode_1_2():
+    range_param = request.args.get('range', '0_100')  # по умолчанию
+    try:
+        min_range, max_range = map(int, range_param.split('_'))
+    except ValueError:
+        min_range, max_range = 0, 100  # fallback
     return render_template('game_mode_1_2.html', min_range=min_range, max_range=max_range)
+
 
 # Запуск игры 1.2 — создание новой игры
 @app.route('/start_game_1_2', methods=['POST'])
