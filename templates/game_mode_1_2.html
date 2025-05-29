@@ -16,18 +16,21 @@
   </div>
 
   <div id="game" style="display:none;">
-    <div id="chat">
-      <div id="messages"></div>
-      <input id="answer" placeholder="да / нет" />
-      <button onclick="processAnswer()">Ответить</button>
-    </div>
-
-    <br><hr><br>
-
-    <div id="status">
-      <p>Диапазон: <span id="min-range-game"></span> — <span id="max-range-game"></span></p>
-      <p id="secret-number" style="font-weight:bold;"></p>
-    </div>
+	<div id="chat">
+		<div id="messages"></div> <!-- Сюда будем добавлять сообщения -->
+  </div>
+  
+  <div id="input-area">
+    <input id="answer" placeholder="да / нет" />
+    <button onclick="processAnswer()">Ответить</button>
+  </div>
+  
+  <br><hr><br>
+  
+  <div id="status">
+    <p>Диапазон: <span id="min-range-game"></span> — <span id="max-range-game"></span></p>
+    <p id="secret-number" style="font-weight:bold;"></p>
+  </div>
 
     <button onclick="exitGame()">Выйти из игры</button>
   </div>
