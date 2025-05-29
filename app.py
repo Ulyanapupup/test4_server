@@ -1,9 +1,10 @@
 import eventlet
 eventlet.monkey_patch()
 
+import os
+import uuid
 from flask import Flask, render_template, request, jsonify, session
 from flask_socketio import SocketIO, send
-import uuid
 
 # Импортируем логику игры
 from game_logic import mode_1_1
