@@ -1,5 +1,5 @@
-const minRange = {{ min_range }};
-const maxRange = {{ max_range }};
+const minRange = window.minRange;
+const maxRange = window.maxRange;
 let gameId = null;
 
 document.getElementById('min-range-setup').textContent = minRange;

@@ -25,13 +25,14 @@
   </div>
 
   <!-- Сначала questionPool.js -->
-  <script src="questionPool.js"></script>
+  <script src="{{ url_for('static', filename='questionPool.js') }}"></script>
   <!-- Потом ваш основной скрипт -->
   <script>
-	  const minRange = {{ min_range }};
-	  const maxRange = {{ max_range }};
+	  window.minRange = {{ min_range }};
+	  window.maxRange = {{ max_range }};
 	</script>
 	<script src="{{ url_for('static', filename='game_mode_1_2.js') }}"></script>
+	<script src="{{ url_for('static', filename='questionPool.js') }}"></script>
 
 </body>
 </html>
