@@ -69,8 +69,10 @@ function processAnswer() {
 	  appendToChat("Компьютер", data.response);
 
 	  // Предположим, что сервер возвращает finished === true и number — угаданное число
-	  if (data.finished) {
+	  if (data.done) {
 		  disableInput();
+		  console.log('Игра закончена, вызываю showResultBanner с результатом:', data.response);
+
 		  // В data.response содержится текст: "Ура! Я угадала!" или "О нет, я ошиблась"
 		  // Используем startsWith чтобы проверить
 		  const success = data.response.startsWith("Ура");
@@ -96,11 +98,14 @@ function exitGame() {
 }
 
 function disableInput() {
+  console.log('Выключаю ввод');
   document.getElementById('answer').disabled = true;
   document.getElementById('send-button').disabled = true;
 }
 
 function showResultBanner(success) {
+	console.log('showResultBanner вызвана');
+
   const container = document.getElementById('result-banner-container');
   container.innerHTML = '';
 
