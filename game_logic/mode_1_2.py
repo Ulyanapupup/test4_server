@@ -130,7 +130,7 @@ class Game:
         if len(self.possible_numbers) == 0:
             return "Вы меня запутали 🙃"
         elif len(self.possible_numbers) == 1:
-            self.finished = True
+            self.awaiting_final_confirmation = True
             return f"Я знаю! Это число {self.possible_numbers[0]}"
         else:
             return self.next_question()
