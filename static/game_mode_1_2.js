@@ -55,6 +55,7 @@ function processAnswer() {
   })
     .then(res => res.json())
     .then(data => {
+		console.log('Ответ сервера:', data); // отладка
 	  if (data.error) {
 		alert(data.error);
 		return;
@@ -64,11 +65,16 @@ function processAnswer() {
 
 	  // Предположим, что сервер возвращает finished === true и number — угаданное число
 	  if (data.finished) {
-		document.getElementById('secret-number').textContent = `Компьютер угадал: ${data.number}`;
-		disableInput();
-		// Проверяем, есть ли слово "Ура" в ответе, чтобы понять, угадала ли система
-		showResultBanner(data.response.toLowerCase().includes("ура"));
-	  }
+		  disableInput();
+		  // В data.response содержится текст: "Ура! Я угадала!" или "О нет, я ошиблась"
+		  // Используем startsWith чтобы проверить
+		  const success = data.response.startsWith("Ура");
+		  showResultBanner(success);
+
+		  if (data.number !== undefined) {
+			document.getElementById('secret-number').textContent = `Компьютер угадал: ${data.number}`;
+		  }
+		}
 	});
 }
 
@@ -106,4 +112,5 @@ function showResultBanner(success) {
 
   container.appendChild(banner);
 }
+
 
