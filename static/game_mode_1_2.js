@@ -2,10 +2,14 @@ const minRange = window.minRange;
 const maxRange = window.maxRange;
 let gameId = null;
 
+console.log('game_mode_1_2.js загружен');
+
+
 document.getElementById('min-range-setup').textContent = minRange;
 document.getElementById('max-range-setup').textContent = maxRange;
 
 document.getElementById('start-button').onclick = startGame;
+
 
 function startGame() {
   const secret = Number(document.getElementById('user-secret').value);
@@ -112,5 +116,7 @@ function showResultBanner(success) {
 
   container.appendChild(banner);
 }
+window.processAnswer = processAnswer;
+
 
 
