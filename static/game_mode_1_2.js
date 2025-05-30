@@ -90,6 +90,9 @@ function disableInput() {
 }
 
 function showResultBanner(success) {
+  const container = document.getElementById('result-banner-container');
+  container.innerHTML = ''; // очистить старое сообщение
+
   const banner = document.createElement('div');
   banner.className = 'result-banner';
   banner.innerText = success ? 'Система угадала число!' : 'Система не угадала число.';
@@ -100,6 +103,7 @@ function showResultBanner(success) {
   banner.style.border = '1px solid';
   banner.style.borderColor = success ? '#c3e6cb' : '#f5c6cb';
   banner.style.borderRadius = '5px';
-  document.getElementById('game').appendChild(banner);
+
+  container.appendChild(banner);
 }
 
