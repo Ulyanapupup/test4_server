@@ -40,6 +40,7 @@ class Game:
     def __init__(self, secret, min_range, max_range):
         self.finished = False
         self.final_guess = None  # Последнее число, если система уверена
+        self.awaiting_final_confirmation = False
         self.secret = secret
         self.min_range = min_range
         self.max_range = max_range
@@ -73,7 +74,9 @@ class Game:
         if len(self.possible_numbers) <= 1:
             guess = self.possible_numbers[0] if self.possible_numbers else 'не найдено'
             self.final_guess = guess
-            return f"Я знаю! Это число {guess}"
+            self.awaiting_final_confirmation = True
+            return f"Я знаю! Это число {guess}?"
+
 
         mid = (self.min + self.max) // 2
         while mid in self.asked_range_questions:
@@ -92,13 +95,14 @@ class Game:
         yes = answer.lower().strip() == "да"
         
         # Обработка финального ответа
-        if self.final_guess is not None:
+        if self.awaiting_final_confirmation:
             self.finished = True
+            self.awaiting_final_confirmation = False
             if yes:
                 return "Ура! Я угадала!"
             else:
                 return "О нет, я ошиблась"
-            
+  
         if not self.current_question:
             return "Нет текущего вопроса."
 
