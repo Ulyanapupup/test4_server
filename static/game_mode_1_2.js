@@ -32,13 +32,6 @@ function startGame() {
       document.getElementById('setup').style.display = 'none';
 	  document.getElementById('game').style.display = 'block';
 	  
-	  setTimeout(() => {
-		  updateRangeDisplay(data.min, data.max);
-		  appendToChat("Компьютер", data.question);
-	  }, 0);
-
-	  updateRangeDisplay(data.min, data.max);
-	  
       appendToChat("Компьютер", data.question);
     });
 }
@@ -73,16 +66,7 @@ function processAnswer() {
         document.getElementById('secret-number').textContent = `Компьютер угадал: ${data.number}`;
         document.getElementById('answer').disabled = true;
       }
-
-      if (data.min !== undefined && data.max !== undefined) {
-        updateRangeDisplay(data.min, data.max);
-      }
     });
-}
-
-function updateRangeDisplay(min, max) {
-  document.getElementById('min-range-game').textContent = min;
-  document.getElementById('max-range-game').textContent = max;
 }
 
 function appendToChat(sender, text) {
