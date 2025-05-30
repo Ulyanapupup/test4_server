@@ -1,9 +1,8 @@
+console.log('game_mode_1_2.js загружен');
+
 const minRange = window.minRange;
 const maxRange = window.maxRange;
 let gameId = null;
-
-console.log('game_mode_1_2.js загружен');
-
 
 document.getElementById('min-range-setup').textContent = minRange;
 document.getElementById('max-range-setup').textContent = maxRange;
@@ -41,6 +40,8 @@ function startGame() {
 }
 
 function processAnswer() {
+	console.log('processAnswer вызвана');
+	
   const answerInput = document.getElementById('answer');
   const answer = answerInput.value.trim().toLowerCase();
 
@@ -101,7 +102,7 @@ function disableInput() {
 
 function showResultBanner(success) {
   const container = document.getElementById('result-banner-container');
-  container.innerHTML = ''; // очистить старое сообщение
+  container.innerHTML = '';
 
   const banner = document.createElement('div');
   banner.className = 'result-banner';
@@ -116,7 +117,8 @@ function showResultBanner(success) {
 
   container.appendChild(banner);
 }
-window.processAnswer = processAnswer;
+document.getElementById('send-button').addEventListener('click', processAnswer);
+
 
 
 
