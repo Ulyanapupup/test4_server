@@ -30,8 +30,13 @@ function startGame() {
       gameId = data.game_id;
 	  
       document.getElementById('setup').style.display = 'none';
-      document.getElementById('game').style.display = 'block';
+	  document.getElementById('game').style.display = 'block';
 	  
+	  setTimeout(() => {
+		  updateRangeDisplay(data.min, data.max);
+		  appendToChat("Компьютер", data.question);
+	  }, 0);
+
 	  updateRangeDisplay(data.min, data.max);
 	  
       appendToChat("Компьютер", data.question);
