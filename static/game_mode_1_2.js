@@ -55,18 +55,21 @@ function processAnswer() {
   })
     .then(res => res.json())
     .then(data => {
-      if (data.error) {
-        alert(data.error);
-        return;
-      }
+	  if (data.error) {
+		alert(data.error);
+		return;
+	  }
 
-      appendToChat("Компьютер", data.response);
+	  appendToChat("Компьютер", data.response);
 
-      if (data.finished && data.number !== undefined) {
-        document.getElementById('secret-number').textContent = `Компьютер угадал: ${data.number}`;
-        document.getElementById('answer').disabled = true;
-      }
-    });
+	  // Предположим, что сервер возвращает finished === true и number — угаданное число
+	  if (data.finished) {
+		document.getElementById('secret-number').textContent = `Компьютер угадал: ${data.number}`;
+		disableInput();
+		// Проверяем, есть ли слово "Ура" в ответе, чтобы понять, угадала ли система
+		showResultBanner(data.response.toLowerCase().includes("ура"));
+	  }
+	});
 }
 
 function appendToChat(sender, text) {
@@ -80,3 +83,23 @@ function appendToChat(sender, text) {
 function exitGame() {
   window.location.href = '/';
 }
+
+function disableInput() {
+  document.getElementById('answer').disabled = true;
+  document.getElementById('send-button').disabled = true;
+}
+
+function showResultBanner(success) {
+  const banner = document.createElement('div');
+  banner.className = 'result-banner';
+  banner.innerText = success ? 'Система угадала число!' : 'Система не угадала число.';
+  banner.style.marginTop = '20px';
+  banner.style.padding = '10px';
+  banner.style.backgroundColor = success ? '#d4edda' : '#f8d7da';
+  banner.style.color = success ? '#155724' : '#721c24';
+  banner.style.border = '1px solid';
+  banner.style.borderColor = success ? '#c3e6cb' : '#f5c6cb';
+  banner.style.borderRadius = '5px';
+  document.getElementById('game').appendChild(banner);
+}
+
