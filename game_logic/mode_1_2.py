@@ -38,6 +38,8 @@ unique_functions = {
 
 class Game:
     def __init__(self, secret, min_range, max_range):
+        self.finished = False
+        self.final_guess = None  # Последнее число, если система уверена
         self.secret = secret
         self.min_range = min_range
         self.max_range = max_range
@@ -67,9 +69,11 @@ class Game:
 
             self.range_guessing_mode = True
 
-        # binary search mode
+        # бинарный поиск
         if len(self.possible_numbers) <= 1:
-            return f"Я знаю! Это число {self.possible_numbers[0] if self.possible_numbers else 'не найдено'}"
+            guess = self.possible_numbers[0] if self.possible_numbers else 'не найдено'
+            self.final_guess = guess
+            return f"Я знаю! Это число {guess}"
 
         mid = (self.min + self.max) // 2
         while mid in self.asked_range_questions:
@@ -86,6 +90,15 @@ class Game:
 
     def process_answer(self, answer):
         yes = answer.lower().strip() == "да"
+        
+        # Обработка финального ответа
+        if self.final_guess is not None:
+            self.finished = True
+            if yes:
+                return "Ура! Я угадала!"
+            else:
+                return "О нет, я ошиблась"
+            
         if not self.current_question:
             return "Нет текущего вопроса."
 
