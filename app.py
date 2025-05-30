@@ -77,9 +77,9 @@ def answer_1_2():
         return jsonify({'error': 'Игра не найдена'}), 404
 
     response = game.process_answer(answer)
-    done = False
-    if isinstance(response, str) and response.startswith("Я знаю!"):
-        done = True
+
+    # Надежная проверка завершения игры
+    done = getattr(game, 'finished', False)
 
     return jsonify({'response': response, 'done': done})
 
