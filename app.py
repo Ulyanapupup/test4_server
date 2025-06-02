@@ -6,8 +6,8 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO, send
 
 # Импортируем обработчики
-from server.mode_1_1_handlers import setup_mode_1_1_routes
-from server.mode_1_2_handlers import setup_mode_1_2_routes
+from mode_1_1_handlers import setup_mode_1_1_routes
+from mode_1_2_handlers import setup_mode_1_2_routes
 
 app = Flask(__name__)
 app.secret_key = 'some_secret_key'
